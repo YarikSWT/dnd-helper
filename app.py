@@ -6,7 +6,7 @@ import preview
 
 app = Flask(__name__, static_url_path = "/static")
 
-DOMAIN = 'localhost:5000'
+DOMAIN = 'http://18.218.160.207:5000'
 
 @app.route('/')
 def hello_world():
