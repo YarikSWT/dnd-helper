@@ -58,9 +58,9 @@ def get_image_names(url):
 def url_to_image(url):
   # download the image, convert it to a NumPy array, and then read
 	# it into OpenCV format
-  print('trying to load image from url ', url)
+#   print('trying to load image from url ', url)
   resp = urllib.request.urlopen(url)
-  print('done load')
+#   print('done load')
   image = np.asarray(bytearray(resp.read()), dtype="uint8")
   image_cvt = cv2.imdecode(image, cv2.IMREAD_COLOR)
   image = cv2.cvtColor(image_cvt, cv2.COLOR_BGR2RGB)
