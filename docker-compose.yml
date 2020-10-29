@@ -7,5 +7,5 @@ services:
     volumes:
       - ./static:/usr/src/app/static
     environment:
-      DOMAIN: http://http://134.0.116.62
+      DOMAIN: http://134.0.116.62
       IMG_BASE_URL: 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/'
