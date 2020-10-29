@@ -1,11 +1,9 @@
 FROM python:3.8
 
-RUN pip install pipenv
-
 WORKDIR /usr/src/app
 COPY . .
-RUN pipenv install
+RUN pip install -r requirements.txt
 
 ENV FLASK_APP app.py
 
-CMD [ "pipenv", "run", "gunicorn", "-w", "4", "-b", ":5000", "--timeout","150", "app:app" ]
+CMD ["gunicorn", "-w", "4", "-b", ":5000", "--timeout","150", "app:app" ]

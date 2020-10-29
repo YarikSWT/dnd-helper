@@ -5,4 +5,4 @@ services:
     ports:
       - "80:5000"
     volumes:
-      - ./static:/static
+      - ./static:/usr/src/app/static
