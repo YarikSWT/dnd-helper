@@ -12,6 +12,7 @@ import matplotlib.image as image
 import math
 from datetime import datetime
 import hashlib
+import random
 matplotlib.use('Agg')
 
 
@@ -20,20 +21,27 @@ FOLDER = './static/'
 
 
 
-def get_image_names(url):
-    formedUrl = url.replace('/Исходники', '')
-    if(formedUrl[-1] != '/'):
-        formedUrl+='/'
-    page_url = formedUrl + quote('Исходники')
-
-    uClient = uReq(page_url)
+def get_image_names_(url):
+    uClient = uReq(url)
 
     page_soup = soup(uClient.read(), "html.parser")
     uClient.close()
 
     found = page_soup.findAll('script')
 
-    script = found[29]
+    idx = 23
+
+    for i in range(len(found)):
+        script = found[i]
+        test = str(script)
+        try:
+            index = test.index('window.cloudSettings')
+            idx = i
+            print('found in ', idx)
+            break
+        except:
+            continue
+
     text = str(script)
     text = text.replace('window.cloudSettings =', '')
     text = text.replace('<script>', '')
@@ -43,17 +51,50 @@ def get_image_names(url):
     text = text.replace('\\x', '')
     text = text.replace('\\x', '')
 
-    print('start parse to json')
-
     jsn = json.loads(text)
+    tree = jsn['folders']['tree']
 
-    imgs_names = jsn['folders']['tree'][1]['list'][0]['items']
+    idx_t = 0
+    for i in range(len(tree)):
+        tree_item = tree[i]
+        print('\n\n', tree_item)
+        try:
+            items =  json.dumps(tree_item['list'][0]['items'])
+            # print('\n\n {} items: '.format(i), items )
+            try:
+                index = items.index('.JPG')
+                idx_t = i
+            except:
+                print('blya')
+                try:
+                    index = items.index('.JPEG')
+                    idx_t = i
+                except:
+                    continue
+        except:
+            continue
 
-    print('imgs_names: ', imgs_names)
-
-    # print(imgs_names)
+    imgs_names = tree[idx_t]['list'][0]['items']
 
     return imgs_names
+
+def get_image_names(url):
+    names = get_image_names_(url)
+    first = names[0]
+    print("\n\nFIRST: ", first)
+    if (first.split('/')[-1].lower() == 'исходники'):
+        url_ = url + quote('Исходники')
+        names_ = get_image_names_(url_)
+        first_ = names_[0]
+        print("\n\nFIRST 2: ", first_, first_.split('/')[-1].lower())
+        if (first_.split('/')[-1].lower() == 'исходники'):
+            url__ = url + quote('исходники')
+            names__ = get_image_names_(url__)
+            return names__
+        else:
+            return names_
+    else:
+        return names
 
 def url_to_image(url):
   # download the image, convert it to a NumPy array, and then read
@@ -68,18 +109,12 @@ def url_to_image(url):
 
 def get_images_by_names(names):
 
-    normalized_names = []
-    for name in names:
-        splited = name.split('Исходники')
-        norma = splited[0] + quote('Исходники') + splited[1]
-        normalized_names.append(norma)
-
-    print('normalized: ', len(normalized_names))
-
-    imgs = [url_to_image(IMG_BASE_URL + img_name) for img_name in normalized_names]
+    imgs = [url_to_image(IMG_BASE_URL + quote(img_name)) for img_name in names]
 
     print('Downloaded {} images'.format(len(imgs)))
 
+    random.shuffle(imgs)
+    print('Images was Shuffled')
     return imgs
 
 

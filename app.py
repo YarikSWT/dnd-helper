@@ -17,6 +17,7 @@ def hello_world():
 def create_preview():
     mail_url = request.args.get('url')
     url = unquote(mail_url)
+    print("GIVEN URL: ", url)
     pdf_name = preview.create(url)
     ip_address = request.remote_addr
     print('Created PDF:', pdf_name)
