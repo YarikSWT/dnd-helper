@@ -3,9 +3,10 @@ services:
   web:
     build: .
     ports:
-      - "80:5000"
+      - "443:443"
     volumes:
       - ./static:/usr/src/app/static
+      - ~/certs:/certs
     environment:
       DOMAIN: http://134.0.116.62
       IMG_BASE_URL: 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/'
