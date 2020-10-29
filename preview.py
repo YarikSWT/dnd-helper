@@ -153,6 +153,8 @@ def imgs2pdf(imgs, url):
 
 
 def create(url):
+    if(url[-1] != '/'):
+        url+='/'
     names = get_image_names(url)
     imgs = get_images_by_names(names)
     pdf_name = imgs2pdf(imgs, url)
