@@ -16,7 +16,7 @@ import random
 matplotlib.use('Agg')
 
 
-IMG_BASE_URL = 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/'
+IMG_BASE_URL = os.getenv('IMG_BASE_URL', 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/')
 FOLDER = './static/'
 
 

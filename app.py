@@ -1,12 +1,13 @@
 from flask import Flask
 from urllib.parse import unquote
 from flask import request
+import os
 
 import preview
 
 app = Flask(__name__, static_url_path = "/static")
 
-DOMAIN = 'http://18.218.160.207:5000'
+DOMAIN = os.getenv('DOMAIN', 'http://localhost:5000')
 
 @app.route('/')
 def hello_world():
