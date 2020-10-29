@@ -21,5 +21,6 @@ def create_preview():
     print("GIVEN URL: ", url)
     pdf_name = preview.create(url)
     ip_address = request.remote_addr
-    print('Created PDF:', pdf_name)
-    return 'Created PDF:      ' + DOMAIN + pdf_name[1:]
+    result = 'Created PDF: <a href="{}"> Link to PDF </a>'.format(pdf_name)
+    print(result)
+    return result
