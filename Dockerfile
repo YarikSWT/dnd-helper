@@ -3,7 +3,9 @@ FROM python:3.8
 WORKDIR /usr/src/app
 COPY . .
 RUN apt-get update
-RUN apt-get install libgl1-mesa-glx libjpeg62
+RUN apt-get install 'ffmpeg'\
+    'libsm6'\ 
+    'libxext6'  -y
 RUN pip install -r requirements.txt
 
 ENV FLASK_APP app.py
