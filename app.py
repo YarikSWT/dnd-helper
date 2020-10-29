@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from urllib.parse import unquote
 from flask import request
 import os
@@ -24,3 +24,9 @@ def create_preview():
     result = 'Created PDF: <a href="{}"> Link to PDF </a>'.format(pdf_name)
     print(result)
     return result
+
+@app.route('/preview')
+def preview_page():
+    mail_url = request.args.get('url')
+    url = unquote(mail_url)
+    return render_template('preview.html', mail_url=url)
