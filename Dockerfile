@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 
 ENV FLASK_APP app.py
 
-CMD ["gunicorn", "-w", "4", "-b", ":443", "--timeout","150", "--certfile", "/certs/fullchain.pem", "--keyfile", "/certs/privkey.pem", "app:app" ]
+CMD ["gunicorn", "-w", "4", "-b", ":5000", "--timeout","150", "--certfile", "/certs/fullchain.pem", "--keyfile", "/certs/privkey.pem", "app:app" ]

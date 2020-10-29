@@ -3,10 +3,21 @@ services:
   web:
     build: .
     ports:
-      - "443:443"
+      - "5000:5000"
     volumes:
       - ./static:/usr/src/app/static
-      - ~/certs:/certs
     environment:
       DOMAIN: http://134.0.116.62
       IMG_BASE_URL: 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/'
+
+  nginx:
+    image: nginx:1.17
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ~/certs:/certs
+    depends_on:
+      - web
