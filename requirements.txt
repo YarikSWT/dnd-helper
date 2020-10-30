@@ -17,6 +17,7 @@ opencv-python==4.4.0.44
 Pillow==8.0.1
 pyparsing==2.4.7
 python-dateutil==2.8.1
+gevent
 requests==2.24.0
 sha1==1.2
 six==1.15.0
