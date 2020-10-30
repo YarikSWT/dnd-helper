@@ -1,5 +1,48 @@
 <!doctype html>
-<title>D&D group</title>
-<a href="/create-preview?url={{mail_url}}">
-  <button> Создать PDF превью</button>
-</a>
+
+<head>
+  <title>D&D group</title>
+  <style>
+    /* body {background-color: powderblue;} */
+    /* h1   {color: blue;} */
+    /* p    {color: red;} */
+    .container {
+      display: flex;
+      display: flex;
+      justify-content: center;
+      height: 100vh;
+      align-items: center;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #668ad8;
+      width: 120px;
+      height: 120px;
+      line-height: 120px;
+      border-radius: 50%;
+      border: double 4px #668ad8;
+      text-align: center;
+      vertical-align: middle;
+      overflow: hidden;
+      transition: .6s;
+    }
+
+    .btn:hover {
+      -webkit-transform: rotateY(360deg);
+      -ms-transform: rotateY(360deg);
+      transform: rotateY(360deg);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <a href="/create-preview?url={{mail_url}}" class="btn">
+      <img src="/static/export-pdf.png" alt="">
+    </a>
+  </div>
+</body>

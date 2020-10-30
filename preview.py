@@ -15,10 +15,12 @@ import hashlib
 import random
 matplotlib.use('Agg')
 import os
+from PIL import Image, ImageDraw, ImageFont
 
 IMG_BASE_URL = os.getenv('IMG_BASE_URL', 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/')
 FOLDER = './static/'
-
+FOOTER_TEXT = 'Поздравляем Вас!'
+HEADER_TEXT = 'Фото предоставлено D&D Group для ознакомительного просмотра. \n\nБыло сделано {} снимков. \n\nЧтобы приобрести данные фотографии в оригинальном качестве, \nобращайтесь к вашему личному менеджеру. \n\n +7 (925) 066-43-05'
 
 
 def get_image_names_(url):
@@ -129,27 +131,77 @@ def imgs2pdf(imgs, url):
     max_width = num_cols * 170
     dpi = 10
 
-    watermark = cv2.imread("watermark.jpeg", cv2.IMREAD_COLOR)
-
     plt.axis('off')
     figsize = max_width / float(dpi), max_height / float(dpi)
     f = plt.figure(figsize=figsize)
-    f.suptitle('Фото предоставленно DnD Group для ознакомительного просмотра. \n Чтобы приобрести данные фотографии в оригинальном качестве, обращайтесь к менеджеру.', fontsize=50)
     for i in range(len(imgs)):
         img_it = imgs[i]
         subplot = plt.subplot(num_rows, num_cols, i + 1)
         subplot.axis('off')
         subplot.imshow(img_it)
-    f.figimage(watermark, max_width/2, max_height/2, zorder=3, alpha=.5)
-    now = datetime.now()
 
     name = hashlib.sha1(url.encode('utf-8')).hexdigest()
 
-    file_path = FOLDER + str(name) + '.pdf'
+    file_path = FOLDER + str(name) + '.png'
 
     f.savefig(file_path)
 
     return file_path
+
+def create_blank_image(width, height):
+  # height = 1340
+  # width = 3650
+  blank_image = np.zeros((height,width,3), np.uint8)
+  blank_image[:, :, :] = (255, 255, 255)
+  return blank_image
+
+def put_text2img(text, image, offset, font_size, align='center', fill='black'):
+  im = Image.fromarray(image)
+  draw = ImageDraw.Draw(im)
+  # # здесь узнаем размеры сгенерированного блока текста
+  font = ImageFont.truetype("cocon-regular.otf", font_size, encoding='UTF-8')
+  draw = ImageDraw.Draw(im).multiline_text(offset, text, fill=fill, font=font)
+
+  result = np.asarray(im)
+  return result
+
+def convert_pdf_to_cv2(pdf_path):
+    raw_pdf = cv2.imread(pdf_path, cv2.IMREAD_COLOR)
+    raw_pdf = cv2.cvtColor(raw_pdf, cv2.COLOR_BGR2RGB)
+    os.remove(pdf_path)
+    return raw_pdf
+
+def insert_img2img(front, back, offset):
+    x_offset, y_offset = offset
+    back[y_offset:y_offset+front.shape[0], x_offset:x_offset+front.shape[1]] = front
+    return back
+
+def add_footer_and_header(raw_pdf, file_path, photos_num):
+    height = 1600
+    width = int(3650 * 2)
+    watermark = cv2.imread("watermark.jpeg", cv2.IMREAD_COLOR)
+    watermark = cv2.cvtColor(watermark, cv2.COLOR_BGR2RGB)
+    resized_watermark = cv2.resize(watermark, (0,0), fx=2, fy=2) 
+    #HEADER
+    header_blank = create_blank_image(width, height)
+    watermark_offset = (100, int((header_blank.shape[0] - resized_watermark.shape[0]) / 2))
+    header_logo = insert_img2img(resized_watermark, header_blank, watermark_offset)
+    header = put_text2img(HEADER_TEXT.format(photos_num), header_blank, ((width / 2 - 300), ( height / 2 - 350)),  100)
+    offset_header = (( int((raw_pdf.shape[1] - header.shape[1])/2), 400))
+    new_pdf = insert_img2img(header, raw_pdf, offset_header)
+
+    #FOOTER
+    footer_blank = create_blank_image(width, height)
+    footer = put_text2img(FOOTER_TEXT, footer_blank, (width / 2 - 550, height/ 2 - 30), 130)
+    offset = (int((new_pdf.shape[1] - footer.shape[1])/2), new_pdf.shape[0] - footer.shape[0])
+    final_pdf = insert_img2img(footer, new_pdf, offset)
+
+    
+    final_pil = Image.fromarray(final_pdf)
+
+    new_path = file_path.replace('.png','.pdf')
+    final_pil.save(new_path)
+    return new_path
 
 
 def create(url):
@@ -158,8 +210,9 @@ def create(url):
     names = get_image_names(url)
     imgs = get_images_by_names(names)
     pdf_name = imgs2pdf(imgs, url)
-    return pdf_name
-
+    nparr = convert_pdf_to_cv2(pdf_name)
+    path = add_footer_and_header(nparr,pdf_name, len(imgs) )
+    return path
 
 # names = get_image_names('https://cloud.mail.ru/public/5H3P/5ta4qc4fu/')
 # imgs = get_images_by_names(names)

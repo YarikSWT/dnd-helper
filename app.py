@@ -19,11 +19,12 @@ def create_preview():
     mail_url = request.args.get('url')
     url = unquote(mail_url)
     print("GIVEN URL: ", url)
-    pdf_name = preview.create(url)
-    ip_address = request.remote_addr
+    # pdf_name = preview.create(url)
+    pdf_name = './static/4769ae3e49a15c8a305052ad5f3f746f3b3bad6b.pdf'
+    # ip_address = request.remote_addr
     result = 'Created PDF: <a href="{}"> Link to PDF </a>'.format(pdf_name)
     print(result)
-    return result
+    return render_template('preview-create.html', link=pdf_name)
 
 @app.route('/preview')
 def preview_page():
