@@ -16,7 +16,7 @@ services:
       context: "."
       args:
         - "FLASK_ENV=${FLASK_ENV:-production}"
-    command: celery worker -B -l info -A app.celery
+    command: celery -A app.celery worker --loglevel=info
     depends_on:
       - "redis"
     environment:

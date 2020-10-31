@@ -12,7 +12,7 @@ RUN pip install -r requirements.txt
 
 # RUN ./run-redis.sh
 
-CMD ["celery", "-A", "app.celery", "worker", "--loglevel=info"]
+# CMD ["celery", "-A", "app.celery", "worker", "--loglevel=info"]
 # RUN celery -A app.celery worker --loglevel=info
 
 ENV FLASK_APP app.py
