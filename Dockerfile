@@ -7,7 +7,10 @@ RUN apt-get install 'ffmpeg'\
     'libsm6'\ 
     'libxext6'  -y
 RUN pip install -r requirements.txt
+RUN run-redis.sh
+
+RUN celery -A app.celery worker --loglevel=info
 
 ENV FLASK_APP app.py
 
-CMD ["gunicorn", "-w", "5", "--worker-class", "gevent", "-b", ":5000", "--timeout","500", "app:app" ]
+CMD ["gunicorn", "-w", "5", "--worker-class", "gevent", "-b", ":5000", "--timeout","120", "app:app" ]

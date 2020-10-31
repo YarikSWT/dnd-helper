@@ -39,7 +39,7 @@ def get_image_names_(url):
         try:
             index = test.index('window.cloudSettings')
             idx = i
-            print('found in ', idx)
+            # print('found in ', idx)
             break
         except:
             continue
@@ -59,7 +59,7 @@ def get_image_names_(url):
     idx_t = 0
     for i in range(len(tree)):
         tree_item = tree[i]
-        print('\n\n', tree_item)
+        # print('\n\n', tree_item)
         try:
             items =  json.dumps(tree_item['list'][0]['items'])
             # print('\n\n {} items: '.format(i), items )
@@ -67,7 +67,7 @@ def get_image_names_(url):
                 index = items.index('.JPG')
                 idx_t = i
             except:
-                print('blya')
+                # print('blya')
                 try:
                     index = items.index('.JPEG')
                     idx_t = i
@@ -83,12 +83,12 @@ def get_image_names_(url):
 def get_image_names(url):
     names = get_image_names_(url)
     first = names[0]
-    print("\n\nFIRST: ", first)
+    # print("\n\nFIRST: ", first)
     if (first.split('/')[-1].lower() == 'исходники'):
         url_ = url + quote('Исходники')
         names_ = get_image_names_(url_)
         first_ = names_[0]
-        print("\n\nFIRST 2: ", first_, first_.split('/')[-1].lower())
+        # print("\n\nFIRST 2: ", first_, first_.split('/')[-1].lower())
         if (first_.split('/')[-1].lower() == 'исходники'):
             url__ = url + quote('исходники')
             names__ = get_image_names_(url__)
@@ -166,8 +166,11 @@ def put_text2img(text, image, offset, font_size, align='center', fill='black'):
   return result
 
 def convert_pdf_to_cv2(pdf_path):
+    print('reading pdf.png')
     raw_pdf = cv2.imread(pdf_path, cv2.IMREAD_COLOR)
+    print('converting pdf.png')
     raw_pdf = cv2.cvtColor(raw_pdf, cv2.COLOR_BGR2RGB)
+    print('deleting pdf.png')
     os.remove(pdf_path)
     return raw_pdf
 
@@ -179,17 +182,19 @@ def insert_img2img(front, back, offset):
 def add_footer_and_header(raw_pdf, file_path, photos_num):
     height = 1600
     width = int(3650 * 2)
+    print("Читаю лого")
     watermark = cv2.imread("watermark.jpeg", cv2.IMREAD_COLOR)
     watermark = cv2.cvtColor(watermark, cv2.COLOR_BGR2RGB)
     resized_watermark = cv2.resize(watermark, (0,0), fx=2, fy=2) 
     #HEADER
+    print("Создаю хэдер")
     header_blank = create_blank_image(width, height)
     watermark_offset = (100, int((header_blank.shape[0] - resized_watermark.shape[0]) / 2))
     header_logo = insert_img2img(resized_watermark, header_blank, watermark_offset)
     header = put_text2img(HEADER_TEXT.format(photos_num), header_blank, ((width / 2 - 300), ( height / 2 - 350)),  100)
     offset_header = (( int((raw_pdf.shape[1] - header.shape[1])/2), 400))
     new_pdf = insert_img2img(header, raw_pdf, offset_header)
-
+    print("Создаю футер")
     #FOOTER
     footer_blank = create_blank_image(width, height)
     footer = put_text2img(FOOTER_TEXT, footer_blank, (width / 2 - 550, height/ 2 - 30), 130)
