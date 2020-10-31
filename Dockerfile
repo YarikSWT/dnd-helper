@@ -17,4 +17,4 @@ CMD ["celery", "-A", "app.celery", "worker", "--loglevel=info"]
 
 ENV FLASK_APP app.py
 
-CMD ["gunicorn", "-w", "5", "--worker-class", "gevent", "-b", ":5000", "--timeout","120", "app:app" ]
+CMD ["gunicorn", "-w", "5", "-b", ":5000", "--timeout","120", "app:app" ]
