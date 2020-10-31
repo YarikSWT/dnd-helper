@@ -19,8 +19,6 @@ services:
     command: celery worker -B -l info -A app.celery
     depends_on:
       - "redis"
-    env_file:
-      - ".env"
     environment:
       DOMAIN: https://dndg.ru
       IMG_BASE_URL: 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/'
