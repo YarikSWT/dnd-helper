@@ -7,9 +7,13 @@ RUN apt-get install 'ffmpeg'\
     'libsm6'\ 
     'libxext6'  -y
 RUN pip install -r requirements.txt
-RUN ./run-redis.sh
 
-RUN celery -A app.celery worker --loglevel=info
+CMD ["./run-redis.sh"]
+
+# RUN ./run-redis.sh
+
+CMD ["celery", "-A", "app.celery", "worker", "--loglevel=info"]
+# RUN celery -A app.celery worker --loglevel=info
 
 ENV FLASK_APP app.py
 
