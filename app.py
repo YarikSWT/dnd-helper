@@ -6,19 +6,20 @@ import os
 import time
 import preview
 
+DOMAIN = os.getenv('DOMAIN', 'http://localhost:5000')
+REDIS_URL = os.getenv('REDIS_URL', 'localhost')
+
 app = Flask(__name__, static_url_path = "/static")
 app.config['SECRET_KEY'] = 'top-secret!'
 
 # Celery configuration
-app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
-app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+app.config['CELERY_BROKER_URL'] = 'redis://' + REDIS_URL + ':6379/0'
+app.config['CELERY_RESULT_BACKEND'] = 'redis://' + REDIS_URL + ':6379/0'
 
 # Initialize Celery
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
 
-
-DOMAIN = os.getenv('DOMAIN', 'http://localhost:5000')
 
 @app.route('/')
 def hello_world():

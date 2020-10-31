@@ -8,7 +8,7 @@ RUN apt-get install 'ffmpeg'\
     'libxext6'  -y
 RUN pip install -r requirements.txt
 
-CMD ["./run-redis.sh"]
+# CMD ["./run-redis.sh"]
 
 # RUN ./run-redis.sh
 

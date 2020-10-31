@@ -9,6 +9,10 @@ services:
     environment:
       DOMAIN: https://dndg.ru
       IMG_BASE_URL: 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/'
+      REDIS_URL: 'redis'
+
+  redis:
+    image: "redis:alpine"
 
   nginx:
     image: nginx:1.17
@@ -21,3 +25,4 @@ services:
       - ~/certs:/certs
     depends_on:
       - web
+  
