@@ -74,6 +74,8 @@ def create_preview_long():
     # print('get data', data)
     task = create_preview_task.apply_async()
     return jsonify({}), 202, {'Location': url_for('taskstatus',
+                                                  _external=True,
+                                                  _scheme='https',
                                                   task_id=task.id)}
 
 ## Celery
