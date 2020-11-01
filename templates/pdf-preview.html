@@ -52,6 +52,7 @@
     </div>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="dist/clipboard.min.js"></script>
 
     <script>
         function start_long_task() {
@@ -91,6 +92,8 @@
                         // show result
                         $('#result').text('Результат: ' + data['result']);
                         $('#link-wrap').append(`<a href="${data['result']}" class="alert-link">Ссылка на PDF</a>`)
+                        new ClipboardJS('.btn');
+                        $('.alert').append(`<button class="btn" data-clipboard-text="https://dndg.ru/${data['result']}">Скопировать в буфер обмена</button>`)
                     }
                     else {
                         // something unexpected happened
