@@ -82,12 +82,6 @@
             // send GET request to status URL
             $.getJSON(status_url, function (data) {
                 // update UI
-                data = {}
-                data['status'] = 'ебу собак'
-                data['total'] = 100
-                data['current'] = 69
-                data['state'] = 'SUCCESS'
-                data['result'] = 'google.com'
                 percent = parseInt(data['current'] * 100 / data['total']);
                 $('#percent').text(percent + '%');
                 $('#status').text('Статус: ' +data['status']);
