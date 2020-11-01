@@ -26,7 +26,7 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route('/create-preview')
+@app.route('/create-preview-old')
 def create_preview():
     mail_url = request.args.get('url')
     url = unquote(mail_url)
@@ -37,7 +37,7 @@ def create_preview():
     print(result)
     return render_template('preview-create.html', link=pdf_name)
 
-@app.route('/preview')
+@app.route('/preview-old')
 def preview_page():
     mail_url = request.args.get('url')
     url = unquote(mail_url)
@@ -64,7 +64,7 @@ def longtask():
                                                   _scheme='https',
                                                   task_id=task.id)}
 
-@app.route('/create-preview-long', methods=['POST'])
+@app.route('/create-preview', methods=['POST'])
 def create_preview_long():
     url = request.form.get('url')
     task = create_preview_task.apply_async([url])
@@ -73,7 +73,7 @@ def create_preview_long():
                                                   _scheme='https',
                                                   task_id=task.id)}
 
-@app.route('/pdf-preview')
+@app.route('/preview')
 def pdf_preview():
     mail_url = request.args.get('url')
     url = unquote(mail_url)

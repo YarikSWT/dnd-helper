@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Flask + Celery Examples</title>
+    <title>PDF превью - D&D Group</title>
     <style>
         .progress {
             width: 100%;
@@ -13,34 +13,53 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            margin-top: 20vh;
+            margin-top: 10vh;
+        }
+
+        .progress-wrap {
+            width: 100%;
+            display: flex;
+            margin-top: 140px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #start-bg-job{
+            margin-top: 100px;
+        }
+
+        #progress {
+            width: 60%;
         }
     </style>
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
+        integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
 </head>
 
 <body>
     <div class="title">
-        <h2>Создание PDF превью изображений с Mail Облака</h2>
-        <p>Указанный cloud mail URL: <bold> ****{{short_url}} </bold>
-        </p>
-        <button id="start-bg-job">Создать превью</button><br><br>
+        <h2 class="h2 mb-4">Создание PDF превью изображений с Mail Облака</h2>
+        <div class="alert alert-secondary py-1 mb-5" role="alert">
+            Указанный cloud mail URL: <bold> ****{{short_url}} </bold>
+        </div>
+        <button id="start-bg-job" type="button" class="btn btn-primary btn-lg">Создать превью</button><br><br>
     </div>
-    <div id="progress"></div>
+    <div class="progress-wrap" id="progress-wrap">
+        <div id="progress">
+        </div>
+    </div>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/nanobar/0.2.1/nanobar.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
     <script>
         function start_long_task() {
             // add task status elements
-            div = $('<div class="progress"><div></div><div>0%</div><div>...</div><div></div><div>&nbsp;</div></div><hr>');
+            div = $('<div class="progress"><div class="progress-bar progress-bar-striped bg-success" style="width: 25%;" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div></div>');
             $('#progress').append(div);
-
-            // create a progress bar
-            var nanobar = new Nanobar({
-                bg: '#44f',
-                target: div[0].childNodes[0]
-            });
+            statusDiv = $('<div class="mt-4"><div class="alert alert-info info" role="alert"><div id="percent" class="text-center mb-3"></div><div id="status"></div> <div id="result" class="text-center"></div><div id="link-wrap"></div></div></div>')
+            $('#progress-wrap').append(statusDiv);
 
             // send ajax POST request to start background job
             $.ajax({
@@ -51,26 +70,33 @@
                 },
                 success: function (data, status, request) {
                     status_url = request.getResponseHeader('Location');
-                    update_progress(status_url, nanobar, div[0]);
+                    update_progress(status_url);
                 },
                 error: function () {
                     alert('Unexpected error');
                 }
             });
+            
         }
-        function update_progress(status_url, nanobar, status_div) {
+        function update_progress(status_url) {
             // send GET request to status URL
             $.getJSON(status_url, function (data) {
                 // update UI
+                data = {}
+                data['status'] = 'ебу собак'
+                data['total'] = 100
+                data['current'] = 69
+                data['state'] = 'SUCCESS'
+                data['result'] = 'google.com'
                 percent = parseInt(data['current'] * 100 / data['total']);
-                nanobar.go(percent);
-                $(status_div.childNodes[1]).text(percent + '%');
-                $(status_div.childNodes[2]).text(data['status']);
+                $('#percent').text(percent + '%');
+                $('#status').text('Статус: ' +data['status']);
+                $('.progress-bar').css('width', percent+'%').attr('aria-valuenow', percent);   
                 if (data['state'] != 'PENDING' && data['state'] != 'PROGRESS') {
                     if ('result' in data) {
                         // show result
-                        $(status_div.childNodes[3]).text('Результат: ' + data['result']);
-                        $(status_div.childNodes[4]).append(`<a href="${data['result']}">Ссылка на PDF</a>`)
+                        $('#result').text('Результат: ' + data['result']);
+                        $('#link-wrap').append(`<a href="${data['result']} class="alert-link"">Ссылка на PDF</a>`)
                     }
                     else {
                         // something unexpected happened
@@ -78,7 +104,7 @@
                     }
                 }
                 else {
-                    // rerun in 2 seconds
+                    // return in 2 seconds
                     setTimeout(function () {
                         update_progress(status_url, nanobar, status_div);
                     }, 2000);
