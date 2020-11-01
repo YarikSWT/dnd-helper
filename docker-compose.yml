@@ -16,7 +16,7 @@ services:
       context: "."
       args:
         - "FLASK_ENV=${FLASK_ENV:-production}"
-    command: celery -A app.celery worker --loglevel=info
+    command: celery -A app.celery worker --loglevel=info --max-tasks-per-child=1
     depends_on:
       - "redis"
     environment:

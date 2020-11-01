@@ -49,16 +49,15 @@ def loading():
 
 @app.route('/test', methods=['GET'])
 def test():
-    return render_template('test.html')
+    return render_template('test.html', url="google.com")
 
 
 @app.route('/longtask', methods=['POST'])
 def longtask():
     jsn = request.get_json()
     # data = request.data
+    formdata = request.form.get('message')
     data = request.json
-    print('get jsn', jsn)
-    print('get data', data)
     task = long_task.apply_async()
     return jsonify({}), 202, {'Location': url_for('taskstatus',
                                                   _external=True,
@@ -67,16 +66,19 @@ def longtask():
 
 @app.route('/create-preview-long', methods=['POST'])
 def create_preview_long():
-    # jsn = request.get_json()
-    # data = request.data
-    # data = request.json
-    # print('get jsn', jsn)
-    # print('get data', data)
-    task = create_preview_task.apply_async()
+    url = request.form.get('url')
+    task = create_preview_task.apply_async([url])
     return jsonify({}), 202, {'Location': url_for('taskstatus',
                                                   _external=True,
                                                   _scheme='https',
                                                   task_id=task.id)}
+
+@app.route('/pdf-preview')
+def pdf_preview():
+    mail_url = request.args.get('url')
+    url = unquote(mail_url)
+    short_url = url.split('/')[-1]
+    return render_template('pdf-preview.html', url=url, short_url=short_url)
 
 ## Celery
 
@@ -96,8 +98,8 @@ def long_task(self):
     return { 'current': 100, 'total': 100, 'status': 'Task completed!', 'result': 42 }
 
 @celery.task(bind=True)
-def create_preview_task(self):
-    url = 'https://cloud.mail.ru/public/2Lmu/4hWrXdAqo'
+def create_preview_task(self, url):
+    # url = 'https://cloud.mail.ru/public/2Lmu/4hWrXdAqo'
     if(url[-1] != '/'):
         url+='/'
 
@@ -131,7 +133,7 @@ def create_preview_task(self):
 
 @app.route('/status/<task_id>')
 def taskstatus(task_id):
-    task = long_task.AsyncResult(task_id)
+    task = create_preview_task.AsyncResult(task_id)
     if task.state == 'PENDING':
         response = {
             'state': task.state,
