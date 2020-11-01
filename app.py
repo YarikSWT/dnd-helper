@@ -61,6 +61,8 @@ def longtask():
     print('get data', data)
     task = long_task.apply_async()
     return jsonify({}), 202, {'Location': url_for('taskstatus',
+                                                  _external=True,
+                                                  _scheme='https',
                                                   task_id=task.id)}
 
 @app.route('/create-preview-long', methods=['POST'])
