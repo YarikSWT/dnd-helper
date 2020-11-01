@@ -128,7 +128,7 @@ def create_preview_task(self, url):
     self.update_state(state='PROGRESS',
                           meta={'current': 72, 'total': total,
                                 'status': 'Saving results'})
-    return { 'current': 100, 'total': 100, 'status': 'Task completed!', 'result': path }
+    return { 'current': 100, 'total': 100, 'status': 'Задача выполнена!', 'result': path[1:] }
 
 
 

@@ -74,6 +74,7 @@
                     else {
                         // something unexpected happened
                         $(status_div.childNodes[3]).text('Результат: ' + data['state']);
+                        $(status_div.childNodes[3]).append(`<a href="${data['result']}">Ссылка на PDF</a>`)
                     }
                 }
                 else {
