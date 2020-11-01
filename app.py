@@ -43,9 +43,13 @@ def preview_page():
     url = unquote(mail_url)
     return render_template('preview.html', mail_url=url)
 
-@app.route('/test')
+@app.route('/loading')
 def test():
     return render_template('loading.html')
+
+@app.route('/test', methods=['GET'])
+def test():
+    return render_template('test.html')
 
 
 @app.route('/longtask', methods=['POST'])
