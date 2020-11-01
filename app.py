@@ -64,7 +64,7 @@ def longtask():
                                                   _scheme='https',
                                                   task_id=task.id)}
 
-@app.route('/create-preview', methods=['POST'])
+@app.route('/create-preview-long', methods=['POST'])
 def create_preview_long():
     url = request.form.get('url')
     task = create_preview_task.apply_async([url])
