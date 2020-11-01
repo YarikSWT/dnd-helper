@@ -44,7 +44,7 @@ def preview_page():
     return render_template('preview.html', mail_url=url)
 
 @app.route('/loading')
-def test():
+def loading():
     return render_template('loading.html')
 
 @app.route('/test', methods=['GET'])
