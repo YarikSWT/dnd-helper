@@ -99,6 +99,7 @@ def long_task(self):
 
 @celery.task(bind=True)
 def create_preview_task(self, url):
+    print("Task | url", url)
     # url = 'https://cloud.mail.ru/public/2Lmu/4hWrXdAqo'
     if(url[-1] != '/'):
         url+='/'

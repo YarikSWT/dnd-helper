@@ -47,7 +47,7 @@
                 type: 'POST',
                 url: '/create-preview-long',
                 data: {
-                    "message": "{{ url }}"
+                    "url": "{{ url }}"
                 },
                 success: function (data, status, request) {
                     status_url = request.getResponseHeader('Location');
