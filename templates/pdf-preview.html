@@ -90,7 +90,7 @@
                     if ('result' in data) {
                         // show result
                         $('#result').text('Результат: ' + data['result']);
-                        $('#link-wrap').append(`<a href="${data['result']} class="alert-link"">Ссылка на PDF</a>`)
+                        $('#link-wrap').append(`<a href="${data['result']}" class="alert-link">Ссылка на PDF</a>`)
                     }
                     else {
                         // something unexpected happened
