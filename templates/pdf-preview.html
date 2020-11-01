@@ -70,11 +70,11 @@
                     if ('result' in data) {
                         // show result
                         $(status_div.childNodes[3]).text('Результат: ' + data['result']);
+                        $(status_div.childNodes[3]).append(`<a href="${data['result']}">Ссылка на PDF</a>`)
                     }
                     else {
                         // something unexpected happened
                         $(status_div.childNodes[3]).text('Результат: ' + data['state']);
-                        $(status_div.childNodes[3]).append(`<a href="${data['result']}">Ссылка на PDF</a>`)
                     }
                 }
                 else {
