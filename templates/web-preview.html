@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Превью фотосессии - D&D Group</title>
+    <style>
+        .images {
+            width: 100%;
+            padding: 25px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            height: 170px;
+        }
+
+        .logo {
+            object-fit: contain;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
+        integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="header">
+        <img class="logo" src="/static/watermark.jpeg" alt="">
+    </div>
+    <div class="images">
+        <!-- For loop logic of jinja template -->
+        {%for i in range(0, len)%}
+
+        <img src="{{images[i]}}" />
+        {%endfor%}
+
+    </div>
+
+</body>
+
+</html>

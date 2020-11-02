@@ -73,7 +73,7 @@ def create_preview_long():
                                                   _scheme='https',
                                                   task_id=task.id)}
 
-@app.route('/preview')
+@app.route('/preview-pdf')
 def pdf_preview():
     mail_url = request.args.get('url')
     url = unquote(mail_url)
@@ -160,3 +160,13 @@ def taskstatus(task_id):
             'status': str(task.info),  # this is the exception raised
         }
     return jsonify(response)
+
+@app.route('/preview')
+def front():
+    mail_url = request.args.get('url')
+    url = unquote(mail_url)
+    if(url[-1] != '/'):
+        url+='/'
+    names = preview.get_image_names(url)
+    urls = preview.get_urls_by_names(names)
+    return render_template('web-preview.html', len=len(urls), images=urls)

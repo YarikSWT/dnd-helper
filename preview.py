@@ -119,6 +119,8 @@ def get_images_by_names(names):
     print('Images was Shuffled')
     return imgs
 
+def get_urls_by_names(names):
+    return [(IMG_BASE_URL + quote(img_name)) for img_name in names]
 
 def imgs2pdf(imgs, url):
 
