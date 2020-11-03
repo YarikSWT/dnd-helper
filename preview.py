@@ -20,7 +20,7 @@ from PIL import Image, ImageDraw, ImageFont
 IMG_BASE_URL = os.getenv('IMG_BASE_URL', 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/')
 FOLDER = './static/'
 FOOTER_TEXT = 'Поздравляем Вас!'
-HEADER_TEXT = 'Фото предоставлено D&D Group для ознакомительного просмотра. \n\nБыло сделано {} снимков. \n\nЧтобы приобрести данные фотографии в оригинальном качестве, \nобращайтесь к вашему личному менеджеру. \n\n +7 (925) 066-43-05'
+HEADER_TEXT = 'Фото предоставлено D&D Group для ознакомительного просмотра. \n\n Количетсво сделанных фотографий {}. \n\nЧтобы приобрести данные фотографии в оригинальном качестве, \nобращайтесь к вашему личному менеджеру. \n\n +7 (925) 066-43-05'
 
 
 def get_image_names_(url):
@@ -161,7 +161,7 @@ def put_text2img(text, image, offset, font_size, align='center', fill='black'):
   im = Image.fromarray(image)
   draw = ImageDraw.Draw(im)
   # # здесь узнаем размеры сгенерированного блока текста
-  font = ImageFont.truetype("cocon-regular.otf", font_size, encoding='UTF-8')
+  font = ImageFont.truetype("static/styles/cocon-regular.otf", font_size, encoding='UTF-8')
   draw = ImageDraw.Draw(im).multiline_text(offset, text, fill=fill, font=font)
 
   result = np.asarray(im)
@@ -185,7 +185,7 @@ def add_footer_and_header(raw_pdf, file_path, photos_num):
     height = 1600
     width = int(3650 * 2)
     print("Читаю лого")
-    watermark = cv2.imread("watermark.jpeg", cv2.IMREAD_COLOR)
+    watermark = cv2.imread("static/imgs/watermark.jpeg", cv2.IMREAD_COLOR)
     watermark = cv2.cvtColor(watermark, cv2.COLOR_BGR2RGB)
     resized_watermark = cv2.resize(watermark, (0,0), fx=2, fy=2) 
     #HEADER

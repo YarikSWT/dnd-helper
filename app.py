@@ -5,6 +5,7 @@ from urllib.parse import unquote
 import os
 import time
 import preview
+import random
 
 DOMAIN = os.getenv('DOMAIN', 'http://localhost:5000')
 REDIS_URL = os.getenv('REDIS_URL', 'localhost')
@@ -169,4 +170,5 @@ def front():
         url+='/'
     names = preview.get_image_names(url)
     urls = preview.get_urls_by_names(names)
+    random.shuffle(urls)
     return render_template('web-preview.html', len=len(urls), images=urls)

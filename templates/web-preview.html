@@ -4,23 +4,99 @@
 
 <head>
     <title>Превью фотосессии - D&D Group</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+        @font-face {
+            font-family: 'Сocon';
+            src: url('/static/styles/cocon-regular.otf');
+        }
+
+        html,
+        body,
+        p,
+        h1,
+        h2,
+        h3,
+        span {
+            font-family: 'Сocon', sans-serif;
+        }
+
         .images {
             width: 100%;
             padding: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .images img {
+            margin: 23px 30px;
+            object-fit: none;
         }
 
         .header {
             display: flex;
-            justify-content: center;
+            justify-content: space-evenly;
+            align-items: center;
             width: 100%;
-            height: 170px;
+            height: 100%;
+            flex-wrap: wrap;
         }
 
         .logo {
             object-fit: contain;
+            height: 250px;
+            width: 250px;
         }
 
+        .text a {
+            text-decoration: none;
+        }
+
+        .text {
+            margin-top: 20px;
+            width: 50%;
+        }
+
+        @media (max-width: 500px) {
+            .header {
+                padding-top: 20px;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .text {
+                width: 100%;
+                padding: 0 15px;
+            }
+
+            .logo {
+                height: 100px;
+                width: 100px;
+            }
+
+            p.h3 {
+                font-size: 1em;
+            }
+            p.h5 {
+                font-size: 0.8em;
+            }
+            p.h2 {
+                font-size: 1.3em;
+            }
+            p {
+                font-size: 0.85em;
+            }
+
+            .images img {
+                width: calc(50% - 20px);
+                margin: 10px;
+            }
+        }
+
+        html {
+            font-size: 1rem;
+        }
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
         integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
@@ -28,16 +104,23 @@
 
 <body>
     <div class="header">
-        <img class="logo" src="/static/watermark.jpeg" alt="">
+        <img class="logo" src="/static/imgs/watermark.jpeg" alt="">
+        <div class="text text-center">
+            <p class="h3 mb-3">Фото предоставлено D&D Group для ознакомительного просмотра.</p>
+            <p class="h5 mb-3"> Количетсво сделанных фотографий: {{ len }}.</p>
+            <p>Чтобы приобрести данные фотографии в оригинальном качестве, обращайтесь к вашему личному менеджеру.</p>
+            <a class="h3" href="tel:+79250664305">+7 (925) 066-43-05</a>
+        </div>
     </div>
     <div class="images">
-        <!-- For loop logic of jinja template -->
-        {%for i in range(0, len)%}
 
+        {%for i in range(0, len)%}
         <img src="{{images[i]}}" />
         {%endfor%}
 
     </div>
+
+    <h2 class="text-center mt-5 mb-5">Поздравляем Вас!</h2>
 
 </body>
 
