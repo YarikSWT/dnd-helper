@@ -58,6 +58,12 @@
             width: 50%;
         }
 
+        .amount {
+            color: red;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
         @media (max-width: 500px) {
             .header {
                 padding-top: 20px;
@@ -92,10 +98,10 @@
                 width: calc(50% - 20px);
                 margin: 10px;
             }
-        }
 
-        html {
-            font-size: 1rem;
+            .amount {
+                font-size: 17px;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
@@ -107,7 +113,7 @@
         <img class="logo" src="/static/imgs/watermark.jpeg" alt="">
         <div class="text text-center">
             <p class="h3 mb-3">Фото предоставлено D&D Group для ознакомительного просмотра.</p>
-            <p class="h5 mb-3"> Количетсво сделанных фотографий: {{ len }}.</p>
+            <p class="h5 mb-3"> Количетсво сделанных фотографий: <span class="amount">{{ len }}</span></p>
             <p>Чтобы приобрести данные фотографии в оригинальном качестве, обращайтесь к вашему личному менеджеру.</p>
             <a class="h3" href="tel:+79250664305">+7 (925) 066-43-05</a>
         </div>
