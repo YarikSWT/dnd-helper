@@ -170,5 +170,6 @@ def front():
         url+='/'
     names = preview.get_image_names(url)
     urls = preview.get_urls_by_names(names)
+    encoded_url = 'https://dndg.ru/preview?url=' + url
     random.shuffle(urls)
-    return render_template('web-preview.html', len=len(urls), images=urls)
+    return render_template('web-preview.html', len=len(urls), images=urls, encoded_url=encoded_url)

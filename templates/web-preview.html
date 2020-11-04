@@ -64,6 +64,20 @@
             font-size: 24px;
         }
 
+        .whatsup {
+            height: 50px;
+            width: 50px;
+        }
+
+        .phone {
+            height: 58px;
+            width: 58px;
+        }
+
+        .phone-link {
+            display: block;
+        }
+
         @media (max-width: 500px) {
             .header {
                 padding-top: 20px;
@@ -113,20 +127,26 @@
         <img class="logo" src="/static/imgs/watermark.jpeg" alt="">
         <div class="text text-center">
             <p class="h3 mb-3">Фото предоставлено D&D Group для ознакомительного просмотра.</p>
-            <p class="h5 mb-3"> Количетсво сделанных фотографий: <span class="amount">{{ len }}</span></p>
-            <p>Чтобы приобрести данные фотографии в оригинальном качестве, обращайтесь к вашему личному менеджеру.</p>
-            <a class="h3" href="tel:+79250664305">+7 (925) 066-43-05</a>
+            <p class="h5 mb-3"> Количество сделанных фотографий: <span class="amount">{{ len }}</span></p>
+            <p>Чтобы приобрести данные фотографии в оригинальном качестве, сяжитесь с нами:</p>
+            <a href="https://wa.me/+79250664226?text=Здравствуйте%21%20Посмотрели%20миниатюры%20{{encoded_url}}">
+                <img class="whatsup mx-3" src="/static/imgs/whatsup.png" alt="">
+            </a>
+            <a href="tel:+79250664305">
+                <img class="phone mx-3" src="/static/imgs/phone.png" alt="">
+            </a>
         </div>
     </div>
     <div class="images">
 
         {%for i in range(0, len)%}
-        <img src="{{images[i]}}" />
+            <img src="{{images[i]}}" />
         {%endfor%}
 
     </div>
 
-    <h2 class="text-center mt-5 mb-5">Поздравляем Вас!</h2>
+    <h2 class="text-center mt-5">Поздравляем Вас!</h2>
+    <a class="h3 mb-5 w-100 text-center phone-link" href="tel:+79250664305">+7 (925) 066-43-05</a>
 
 </body>
 
