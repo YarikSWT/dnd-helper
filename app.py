@@ -6,6 +6,13 @@ import os
 import time
 import preview
 import random
+from Cryptodome.Cipher import AES
+from Cryptodome.Util.Padding import pad, unpad
+import base64
+BLOCK_SIZE = 32 # Bytes
+
+secret_key = b'Sixteen byte key'
+cipher = AES.new(secret_key, AES.MODE_ECB)
 
 DOMAIN = os.getenv('DOMAIN', 'http://localhost:5000')
 REDIS_URL = os.getenv('REDIS_URL', 'localhost')
@@ -162,14 +169,29 @@ def taskstatus(task_id):
         }
     return jsonify(response)
 
+@app.route('/e/<hashed>')
+def encoded(hashed):
+    decoded = base64.b64decode(hashed.encode('utf-8'))#.decode('utf-8') #cipher.decrypt(hashed)
+    url = decoded.decode("utf-8") 
+    # print('URL', url)
+    names = preview.get_image_names(url)
+    urls = preview.get_urls_by_names(names)
+    encoded_url = "https://dndg.ru/e/" + hashed
+    
+    random.shuffle(urls)
+    return render_template('web-preview.html', len=len(urls), images=urls, encoded_url=encoded_url)
+
+
 @app.route('/preview')
 def front():
     mail_url = request.args.get('url')
     url = unquote(mail_url)
     if(url[-1] != '/'):
         url+='/'
-    names = preview.get_image_names(url)
-    urls = preview.get_urls_by_names(names)
-    encoded_url = 'https://dndg.ru/preview?url=' + url
-    random.shuffle(urls)
-    return render_template('web-preview.html', len=len(urls), images=urls, encoded_url=encoded_url)
+
+    # encoded = cipher.encrypt(pad(url.encode('utf-8'), BLOCK_SIZE))
+    # msg = cipher.encrypt(pad(b'hello', BLOCK_SIZE))
+    path = base64.b64encode(url.encode('utf-8')).decode('utf-8')
+    #.decode('utf-8')
+    print(path)
+    return redirect('/e/' +  path)
