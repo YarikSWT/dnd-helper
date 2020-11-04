@@ -173,7 +173,6 @@ def taskstatus(task_id):
 def encoded(hashed):
     decoded = base64.b64decode(hashed.encode('utf-8'))#.decode('utf-8') #cipher.decrypt(hashed)
     url = decoded.decode("utf-8") 
-    # print('URL', url)
     names = preview.get_image_names(url)
     urls = preview.get_urls_by_names(names)
     encoded_url = "https://dndg.ru/e/" + hashed
@@ -188,10 +187,6 @@ def front():
     url = unquote(mail_url)
     if(url[-1] != '/'):
         url+='/'
-
-    # encoded = cipher.encrypt(pad(url.encode('utf-8'), BLOCK_SIZE))
-    # msg = cipher.encrypt(pad(b'hello', BLOCK_SIZE))
     path = base64.b64encode(url.encode('utf-8')).decode('utf-8')
-    #.decode('utf-8')
     print(path)
     return redirect('/e/' +  path)
