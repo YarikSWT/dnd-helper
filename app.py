@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, session, flash, redirect, \
     url_for, jsonify
-from celery import Celery
+# from celery import Celery
 from urllib.parse import unquote
 import os
 import time
@@ -20,13 +20,13 @@ REDIS_URL = os.getenv('REDIS_URL', 'localhost')
 app = Flask(__name__, static_url_path = "/static")
 app.config['SECRET_KEY'] = 'top-secret!'
 
-# Celery configuration
-app.config['CELERY_BROKER_URL'] = 'redis://' + REDIS_URL + ':6379/0'
-app.config['CELERY_RESULT_BACKEND'] = 'redis://' + REDIS_URL + ':6379/0'
+# # Celery configuration
+# app.config['CELERY_BROKER_URL'] = 'redis://' + REDIS_URL + ':6379/0'
+# app.config['CELERY_RESULT_BACKEND'] = 'redis://' + REDIS_URL + ':6379/0'
 
-# Initialize Celery
-celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
-celery.conf.update(app.config)
+# # Initialize Celery
+# celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+# celery.conf.update(app.config)
 
 
 @app.route('/')
@@ -90,53 +90,53 @@ def pdf_preview():
 
 ## Celery
 
-@celery.task(bind=True)
-def long_task(self):
-    """Background task that runs a long function with progress reports."""
-    verb = ['Starting up', 'Booting', 'Repairing', 'Loading', 'Checking']
-    adjective = ['master', 'radiant', 'silent', 'harmonic', 'fast']
-    noun = ['solar array', 'particle reshaper', 'cosmic ray', 'orbiter', 'bit']
-    message = ''
-    total = 100
-    for i in range(total):
-        self.update_state(state='PROGRESS',
-                          meta={'current': i, 'total': total,
-                                'status': message})
-        time.sleep(1)
-    return { 'current': 100, 'total': 100, 'status': 'Task completed!', 'result': 42 }
+# @celery.task(bind=True)
+# def long_task(self):
+#     """Background task that runs a long function with progress reports."""
+#     verb = ['Starting up', 'Booting', 'Repairing', 'Loading', 'Checking']
+#     adjective = ['master', 'radiant', 'silent', 'harmonic', 'fast']
+#     noun = ['solar array', 'particle reshaper', 'cosmic ray', 'orbiter', 'bit']
+#     message = ''
+#     total = 100
+#     for i in range(total):
+#         self.update_state(state='PROGRESS',
+#                           meta={'current': i, 'total': total,
+#                                 'status': message})
+#         time.sleep(1)
+#     return { 'current': 100, 'total': 100, 'status': 'Task completed!', 'result': 42 }
 
-@celery.task(bind=True)
-def create_preview_task(self, url):
-    print("Task | url", url)
-    # url = 'https://cloud.mail.ru/public/2Lmu/4hWrXdAqo'
-    if(url[-1] != '/'):
-        url+='/'
+# @celery.task(bind=True)
+# def create_preview_task(self, url):
+#     print("Task | url", url)
+#     # url = 'https://cloud.mail.ru/public/2Lmu/4hWrXdAqo'
+#     if(url[-1] != '/'):
+#         url+='/'
 
-    total = 100
-    self.update_state(state='PROGRESS',
-                          meta={'current': 14, 'total': 100,
-                                'status': 'Parsing page '})
-    names = preview.get_image_names(url)
-    self.update_state(state='PROGRESS',
-                          meta={'current': 28, 'total': total,
-                                'status': 'Downloading images'})
-    imgs = preview.get_images_by_names(names)
-    self.update_state(state='PROGRESS',
-                          meta={'current': 32, 'total': total,
-                                'status': 'Putting images into PDF'})
-    pdf_name = preview.imgs2pdf(imgs, url)
-    self.update_state(state='PROGRESS',
-                          meta={'current': 46, 'total': total,
-                                'status': 'Converting pdf for adding frontend'})
-    nparr = preview.convert_pdf_to_cv2(pdf_name)
-    self.update_state(state='PROGRESS',
-                          meta={'current': 58, 'total': total,
-                                'status': 'Adding frontend'})
-    path = preview.add_footer_and_header(nparr,pdf_name, len(imgs) )
-    self.update_state(state='PROGRESS',
-                          meta={'current': 72, 'total': total,
-                                'status': 'Saving results'})
-    return { 'current': 100, 'total': 100, 'status': 'Задача выполнена!', 'result': path[1:] }
+#     total = 100
+#     self.update_state(state='PROGRESS',
+#                           meta={'current': 14, 'total': 100,
+#                                 'status': 'Parsing page '})
+#     names = preview.get_image_names(url)
+#     self.update_state(state='PROGRESS',
+#                           meta={'current': 28, 'total': total,
+#                                 'status': 'Downloading images'})
+#     imgs = preview.get_images_by_names(names)
+#     self.update_state(state='PROGRESS',
+#                           meta={'current': 32, 'total': total,
+#                                 'status': 'Putting images into PDF'})
+#     pdf_name = preview.imgs2pdf(imgs, url)
+#     self.update_state(state='PROGRESS',
+#                           meta={'current': 46, 'total': total,
+#                                 'status': 'Converting pdf for adding frontend'})
+#     nparr = preview.convert_pdf_to_cv2(pdf_name)
+#     self.update_state(state='PROGRESS',
+#                           meta={'current': 58, 'total': total,
+#                                 'status': 'Adding frontend'})
+#     path = preview.add_footer_and_header(nparr,pdf_name, len(imgs) )
+#     self.update_state(state='PROGRESS',
+#                           meta={'current': 72, 'total': total,
+#                                 'status': 'Saving results'})
+#     return { 'current': 100, 'total': 100, 'status': 'Задача выполнена!', 'result': path[1:] }
 
 
 

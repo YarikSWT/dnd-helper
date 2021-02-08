@@ -11,26 +11,26 @@ services:
       IMG_BASE_URL: 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/'
       REDIS_URL: 'redis'
 
-  worker:
-    build:
-      context: "."
-      args:
-        - "FLASK_ENV=${FLASK_ENV:-production}"
-    command: celery -A app.celery worker --loglevel=info --max-tasks-per-child=1
-    depends_on:
-      - "redis"
-    environment:
-      DOMAIN: https://dndg.ru
-      IMG_BASE_URL: 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/'
-      REDIS_URL: 'redis'
-    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
-    stop_grace_period: "${DOCKER_STOP_GRACE_PERIOD:-3s}"
-    volumes:
-      - "${DOCKER_WEB_VOLUME:-./public:/app/public}"
-      - ./static:/usr/src/app/static
+  # worker:
+  #   build:
+  #     context: "."
+  #     args:
+  #       - "FLASK_ENV=${FLASK_ENV:-production}"
+  #   command: celery -A app.celery worker --loglevel=info --max-tasks-per-child=1
+  #   depends_on:
+  #     - "redis"
+  #   environment:
+  #     DOMAIN: https://dndg.ru
+  #     IMG_BASE_URL: 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/'
+  #     REDIS_URL: 'redis'
+  #   restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+  #   stop_grace_period: "${DOCKER_STOP_GRACE_PERIOD:-3s}"
+  #   volumes:
+  #     - "${DOCKER_WEB_VOLUME:-./public:/app/public}"
+  #     - ./static:/usr/src/app/static
 
-  redis:
-    image: "redis:alpine"
+  # redis:
+  #   image: "redis:alpine"
 
   nginx:
     image: nginx:1.17
@@ -39,8 +39,17 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ~/certs:/certs
+      - ./nginx/config:/etc/nginx/conf.d
+      - ./nginx/data/certbot/conf:/etc/letsencrypt
+      - ./nginx/data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
       - web
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./nginx/data/certbot/conf:/etc/letsencrypt
+      - ./nginx/data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   
