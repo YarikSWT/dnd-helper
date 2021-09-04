@@ -10,6 +10,7 @@ services:
       DOMAIN: https://dndg.ru
       IMG_BASE_URL: 'https://thumb.cloud.mail.ru/weblink/thumb/xw20/'
       REDIS_URL: 'redis'
+    restart: always
 
   # worker:
   #   build:
@@ -45,6 +46,7 @@ services:
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
       - web
+    restart: always
 
   certbot:
     image: certbot/certbot
