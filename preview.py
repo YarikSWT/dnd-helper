@@ -37,7 +37,7 @@ def get_image_names_(url):
         script = found[i]
         test = str(script)
         try:
-            index = test.index('window.cloudSettings')
+            index = test.index('window.cloudSettings ={')
             idx = i
             # print('found in ', idx)
             break
